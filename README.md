@@ -1,2 +1,2 @@
-# Example
-An example greeter plugin
+# Slotless
+Slotless plugin to disable equipment and inventory
