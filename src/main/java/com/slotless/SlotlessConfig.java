@@ -1,5 +1,6 @@
 package com.slotless;
 
+import net.runelite.api.ItemID;
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
@@ -8,12 +9,12 @@ import net.runelite.client.config.ConfigItem;
 public interface SlotlessConfig extends Config
 {
 	@ConfigItem(
-		keyName = "greeting",
-		name = "Welcome Greeting",
-		description = "The message to show to the user when they login"
+			keyName = "inventoryReplacementItemId",
+			name = "Inventory Item ID",
+			description = "Item to be replaced with Bank Filler"
 	)
-	default String greeting()
+	default int inventoryReplacementItemId()
 	{
-		return "Hello";
+		return ItemID.AL_KHARID_FLYER;
 	}
 }

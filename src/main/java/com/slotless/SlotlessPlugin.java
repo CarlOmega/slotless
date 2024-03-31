@@ -4,13 +4,10 @@ import com.google.inject.Provides;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.events.GameStateChanged;
-import net.runelite.api.events.MenuOpened;
 import net.runelite.api.events.ScriptPostFired;
-import net.runelite.api.widgets.InterfaceID;
 import net.runelite.api.widgets.Widget;
 import net.runelite.api.widgets.WidgetInfo;
-import net.runelite.api.widgets.WidgetUtil;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.ItemManager;
@@ -30,21 +27,29 @@ public class SlotlessPlugin extends Plugin
 	private Client client;
 
 	@Inject
+	private ClientThread clientThread;
+	@Inject
 	private SlotlessConfig config;
 
 	@Inject
 	private ItemManager itemManager;
 
 	@Override
-	protected void startUp() throws Exception
+	protected void startUp()
 	{
-		log.info("Example started!");
+		clientThread.invoke(this::redrawInventory);
 	}
 
 	@Override
-	protected void shutDown() throws Exception
+	protected void shutDown()
 	{
-		log.info("Example stopped!");
+		clientThread.invoke(this::redrawInventory);
+	}
+
+	private void redrawInventory()
+	{
+		client.runScript(client.getWidget(WidgetInfo.INVENTORY).getOnInvTransmitListener());
+		client.runScript(client.getWidget(WidgetInfo.EQUIPMENT).getOnInvTransmitListener());
 	}
 
 	@Provides
@@ -85,9 +90,8 @@ public class SlotlessPlugin extends Plugin
 		}
 	}
 
-
-
 	private void replaceInventory() {
+		int filler = config.inventoryReplacementItemId();
 		Widget w = client.getWidget(WidgetInfo.INVENTORY);
 		if (w == null) {
 			return;
@@ -95,8 +99,7 @@ public class SlotlessPlugin extends Plugin
 		log.debug("Replacing Inventory with item fillers");
 		for (Widget i : w.getDynamicChildren())
 		{
-
-			if (i.getItemId() == ItemID.AL_KHARID_FLYER)
+			if (i.getItemId() == filler)
 			{
 				i.setName("Filler");
 				i.setTargetVerb(null);
