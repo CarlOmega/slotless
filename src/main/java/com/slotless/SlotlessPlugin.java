@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.ScriptPostFired;
+import net.runelite.api.widgets.ComponentID;
 import net.runelite.api.widgets.Widget;
-import net.runelite.api.widgets.WidgetInfo;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
@@ -48,7 +48,7 @@ public class SlotlessPlugin extends Plugin
 
 	private void redrawInventory()
 	{
-		client.runScript(client.getWidget(WidgetInfo.INVENTORY).getOnInvTransmitListener());
+		client.runScript(Objects.requireNonNull(client.getWidget(ComponentID.INVENTORY_CONTAINER)).getOnInvTransmitListener());
 		// Ensures equipment to be redrawn
 		int slot = 0;
 		for (int i = 0; i < 11; i++) {
@@ -80,7 +80,7 @@ public class SlotlessPlugin extends Plugin
 	}
 
 	private void replaceEquipment() {
-		Widget w = client.getWidget(WidgetInfo.EQUIPMENT);
+		Widget w = client.getWidget(ComponentID.EQUIPMENT_INVENTORY_ITEM_CONTAINER);
 		if (w == null) {
 			return;
 		}
@@ -101,7 +101,7 @@ public class SlotlessPlugin extends Plugin
 
 	private void replaceInventory() {
 		int filler = config.inventoryReplacementItemId();
-		Widget w = client.getWidget(WidgetInfo.INVENTORY);
+		Widget w = client.getWidget(ComponentID.INVENTORY_CONTAINER);
 		if (w == null) {
 			return;
 		}
@@ -114,8 +114,8 @@ public class SlotlessPlugin extends Plugin
 				i.setTargetVerb(null);
 				i.setItemId(ItemID.BANK_FILLER);
 				i.setClickMask(0);
-				i.setOnDragCompleteListener(null);
-				i.setOnDragListener(null);
+				i.setOnDragCompleteListener((Object[]) null);
+				i.setOnDragListener((Object[]) null);
 				Arrays.fill(Objects.requireNonNull(i.getActions()), "");
 			} else if (i.getActions() != null)
 			{
