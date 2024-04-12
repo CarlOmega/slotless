@@ -49,7 +49,15 @@ public class SlotlessPlugin extends Plugin
 	private void redrawInventory()
 	{
 		client.runScript(client.getWidget(WidgetInfo.INVENTORY).getOnInvTransmitListener());
-		client.runScript(client.getWidget(WidgetInfo.EQUIPMENT).getOnInvTransmitListener());
+		// Ensures equipment to be redrawn
+		int slot = 0;
+		for (int i = 0; i < 11; i++) {
+			client.runScript(545, 25362447 + i, slot, 1,1,2);
+			slot++;
+			if (slot == 6 || slot == 8 ||slot == 11) {
+				slot++;
+			}
+		}
 	}
 
 	@Provides
@@ -61,9 +69,12 @@ public class SlotlessPlugin extends Plugin
 	@Subscribe
 	public void onScriptPostFired(ScriptPostFired scriptPostFired) {
 		final int id = scriptPostFired.getScriptId();
-
 		if (id == ScriptID.INVENTORY_DRAWITEM - 1) {
 			replaceInventory();
+		}
+		// for each equipment call (need to find the parent script but not sure if there is one)
+		// might need to optimise this when
+		if (id == 545) {
 			replaceEquipment();
 		}
 	}
@@ -105,9 +116,18 @@ public class SlotlessPlugin extends Plugin
 				i.setTargetVerb(null);
 				i.setItemId(ItemID.BANK_FILLER);
 				i.setClickMask(0);
-				i.setOnDragCompleteListener(null);
-				i.setOnDragListener(null);
-				Arrays.fill(i.getActions(), "");
+				i.setOnDragCompleteListener((Object) null);
+				i.setOnDragListener((Object) null);
+			} else if (i.getActions() != null)
+			{
+				String[] actions = i.getActions();
+				for (int actionIdx = 0; actionIdx < actions.length; ++actionIdx) {
+					if ("Wear".equalsIgnoreCase(actions[actionIdx]) || "Wield".equalsIgnoreCase(actions[actionIdx]) || "Equip".equalsIgnoreCase(actions[actionIdx]))
+					{
+						actions[actionIdx] = "";
+					}
+				}
+
 			}
 		}
 	}
