@@ -94,8 +94,6 @@ public class SlotlessPlugin extends Plugin
 				child.setTargetVerb(null);
 				child.setItemId(ItemID.BANK_FILLER);
 				child.setClickMask(0);
-				child.setOnDragCompleteListener((Object) null);
-				child.setOnDragListener((Object) null);
 				Arrays.fill(Objects.requireNonNull(i.getActions()), "");
 			}
 		}
@@ -116,8 +114,9 @@ public class SlotlessPlugin extends Plugin
 				i.setTargetVerb(null);
 				i.setItemId(ItemID.BANK_FILLER);
 				i.setClickMask(0);
-				i.setOnDragCompleteListener((Object) null);
-				i.setOnDragListener((Object) null);
+				i.setOnDragCompleteListener(null);
+				i.setOnDragListener(null);
+				Arrays.fill(Objects.requireNonNull(i.getActions()), "");
 			} else if (i.getActions() != null)
 			{
 				String[] actions = i.getActions();
