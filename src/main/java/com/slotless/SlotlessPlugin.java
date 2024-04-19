@@ -13,6 +13,8 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.ItemManager;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
+import net.runelite.http.api.item.ItemEquipmentStats;
+import net.runelite.http.api.item.ItemStats;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -49,15 +51,6 @@ public class SlotlessPlugin extends Plugin
 	private void redrawInventory()
 	{
 		client.runScript(Objects.requireNonNull(client.getWidget(ComponentID.INVENTORY_CONTAINER)).getOnInvTransmitListener());
-		// Ensures equipment to be redrawn
-		int slot = 0;
-		for (int i = 0; i < 11; i++) {
-			client.runScript(545, 25362447 + i, slot, 1,1,2);
-			slot++;
-			if (slot == 6 || slot == 8 ||slot == 11) {
-				slot++;
-			}
-		}
 	}
 
 	@Provides
@@ -72,31 +65,6 @@ public class SlotlessPlugin extends Plugin
 		if (id == ScriptID.INVENTORY_DRAWITEM - 1) {
 			replaceInventory();
 		}
-		// for each equipment call (need to find the parent script but not sure if there is one)
-		// might need to optimise this when
-		if (id == 545) {
-			replaceEquipment();
-		}
-	}
-
-	private void replaceEquipment() {
-		Widget w = client.getWidget(ComponentID.EQUIPMENT_INVENTORY_ITEM_CONTAINER);
-		if (w == null) {
-			return;
-		}
-		log.debug("Replacing Equipment with item fillers");
-		for (Widget i : w.getStaticChildren())
-		{
-			Widget child = i.getChild(1);
-			if (child != null && child.getItemId() != 20594 && child.getItemId() > 0) {
-				log.debug("Replacing Equipment: {}, id:{}, itemId:{}", i.getName(), i.getId(), child.getItemId());
-				child.setName("Filler");
-				child.setTargetVerb(null);
-				child.setItemId(ItemID.BANK_FILLER);
-				child.setClickMask(0);
-				Arrays.fill(Objects.requireNonNull(i.getActions()), "");
-			}
-		}
 	}
 
 	private void replaceInventory() {
@@ -105,11 +73,11 @@ public class SlotlessPlugin extends Plugin
 		if (w == null) {
 			return;
 		}
-		log.debug("Replacing Inventory with item fillers");
 		for (Widget i : w.getDynamicChildren())
 		{
 			if (i.getItemId() == filler)
 			{
+				log.debug("Replacing {} with item filler", i.getName());
 				i.setName("Filler");
 				i.setTargetVerb(null);
 				i.setItemId(ItemID.BANK_FILLER);
@@ -119,14 +87,63 @@ public class SlotlessPlugin extends Plugin
 				Arrays.fill(Objects.requireNonNull(i.getActions()), "");
 			} else if (i.getActions() != null)
 			{
-				String[] actions = i.getActions();
-				for (int actionIdx = 0; actionIdx < actions.length; ++actionIdx) {
-					if ("Wear".equalsIgnoreCase(actions[actionIdx]) || "Wield".equalsIgnoreCase(actions[actionIdx]) || "Equip".equalsIgnoreCase(actions[actionIdx]))
-					{
-						actions[actionIdx] = "";
+				final ItemStats itemStats = itemManager.getItemStats(i.getItemId(), false);
+				if (itemStats != null && itemStats.isEquipable()) {
+					final ItemEquipmentStats equipmentStats = itemStats.getEquipment();
+					final int slot = equipmentStats.getSlot();
+					if (equipmentStats.isTwoHanded()) {
+						if (!config.weaponUnlocked() || !config.shieldUnlocked()) {
+							removeEquipOption(i);
+						}
+						continue;
+					}
+
+					if (!checkSlot(slot)) {
+						removeEquipOption(i);
 					}
 				}
+			}
+		}
+	}
 
+	private boolean checkSlot(int equipmentSlot) {
+		switch(equipmentSlot) {
+			case 0:
+				return config.headUnlocked();
+			case 1:
+				return config.capeUnlocked();
+			case 2:
+				return config.amuletUnlocked();
+			case 3:
+				return config.weaponUnlocked();
+			case 4:
+				return config.bodyUnlocked();
+			case 5:
+				return config.shieldUnlocked();
+			case 6:
+				return config.legsUnlocked();
+			case 7:
+				return config.glovesUnlocked();
+			case 8:
+				return config.bootsUnlocked();
+			case 9:
+				return config.ringUnlocked();
+			case 10:
+				return config.ammoUnlocked();
+			default:
+				return false;
+		}
+	}
+
+	private void removeEquipOption(Widget i) {
+		if (i.getActions() == null) {
+			return;
+		}
+		String[] actions = i.getActions();
+		for (int actionIdx = 0; actionIdx < actions.length; ++actionIdx) {
+			if ("Wear".equalsIgnoreCase(actions[actionIdx]) || "Wield".equalsIgnoreCase(actions[actionIdx]) || "Equip".equalsIgnoreCase(actions[actionIdx]))
+			{
+				actions[actionIdx] = "";
 			}
 		}
 	}
