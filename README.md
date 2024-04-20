@@ -38,15 +38,18 @@ All give 0 positive or negative bonuses only thing that does anything is the for
 <table>
   <tr>
     <th>Example (plugin off)</th>
-    <th>Filler</th>
-    <th>Menu actions</th>
+    <th>Slotless Mode on</th>
+    <th>Equipment interface</th>
   </tr>
   <tr>
-    <td><img width="275" alt="equipment_0" src="https://github.com/runelite/plugin-hub/assets/29591318/ed66164a-ff55-463d-92ea-1b9ed8d558ec"></td>
-    <td><img width="271" alt="equipment_1" src="https://github.com/runelite/plugin-hub/assets/29591318/005272f7-433d-462a-a2c2-ab4c3b7f57d2"></td>
-    <td><img width="269" alt="equipment_3" src="https://github.com/runelite/plugin-hub/assets/29591318/cde11281-9373-407e-a435-80df2965872a"></td>
+    <td><img width="269" alt="equipment_4" src="https://github.com/runelite/plugin-hub/assets/29591318/435762d7-0e2b-499c-ae4c-9b11b18cf465"></td>
+    <td><img width="263" alt="equipment_5" src="https://github.com/runelite/plugin-hub/assets/29591318/10d396c7-7be9-4fbb-8316-e6ec93cdab63"></td>
+    <td><img width="556" alt="equipment_6" src="https://github.com/runelite/plugin-hub/assets/29591318/945e5c57-e9a7-4486-b7ce-8514edfb585a"></td>
   </tr>
 </table>
+
+### Config
+<img width="182" alt="Config" src="https://github.com/runelite/plugin-hub/assets/29591318/a4ad861f-c4f9-4d13-8274-202b7d9fcd01">
 
 
 ## Future improvements
