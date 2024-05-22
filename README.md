@@ -1,11 +1,18 @@
 # Slotless
 Slotless plugin to disable equipment and inventory
 
+## Quick Start
+1. Create a fresh UIM members account
+2. Once you spawn in Lumbridge drop and unequip everything 
+3. Run to witches house (start the quest to the point of getting the door key)
+4. Drop trick 27 door keys and fill inventory 
+5. Enable plugin and tele to Lumbridge
+
 ## Inspiration
 Inspired from snowflake accounts such as [RichardTape - Settled](https://www.youtube.com/watch?v=2Jk8e59-Jlo) and building on the work from [Adam](https://github.com/Adam-/runelite-plugins/tree/item-filler), I wanted to play a new game mode that is challenging but not completely locked down. I have a background as a developer so I thought I would give the Runelite Plugin space a go. 
 
 ## Description
-This plugin allows for an account to lock out both the inventory and equipment with bank filler like items. Currently a placeholder item is needed (AL_KHARID_FLYER is the default) and items are needed in equipment slots to be able to replace with bank fillers. It also removes the equip/wear/weild options (most likely have forgotten some) which forces useless items until those slots are unlocked.
+This plugin allows for an account to lock out both the inventory and equipment with bank filler like items. Currently, a placeholder item is needed (AL_KHARID_FLYER is the default) and items are needed in equipment slots to be able to replace with bank fillers. It also removes the equip/wear/weild options (most likely have forgotten some) which forces useless items until those slots are unlocked.
 
 This is made for UIM so there is a lot of bank interface weirdness can be expanded on later. 
 
@@ -51,9 +58,3 @@ All give 0 positive or negative bonuses only thing that does anything is the for
 ### Config
 <img width="182" alt="Config" src="https://github.com/runelite/plugin-hub/assets/29591318/a4ad861f-c4f9-4d13-8274-202b7d9fcd01">
 
-
-## Future improvements
- - Quest Point auto unlock (has to be somewhat manual atm by dropping the placeholder or unequiping said slot item)
- - Black list items instead of forcing fillers
- - Handle the Wear/Wield/Equip options better by determining what category that item sits in
- - Will try to maintain this if anyone activly uses it
